@@ -1,48 +1,344 @@
-const Booking =
-require("../models/Booking");
+const Booking = require("../models/Booking");
+const sendEmail = require("../utils/sendEmail");
 
-exports.createBooking =
-async (req,res)=>{
+// ======================================
+// CREATE BOOKING
+// ======================================
 
-  try{
+exports.createBooking = async (req, res) => {
 
-    const booking =
-    await Booking.create(req.body);
+  try {
 
-    res.status(201).json(booking);
+    const {
+      userId,
+      serviceId,
+      customerName,
+      email,
+      phone,
+      service,
+      bookingDate,
+      timeSlot,
+      amount
+    } = req.body;
+
+    const booking = await Booking.create({
+
+      userId,
+      serviceId,
+
+      customerName,
+
+      email,
+
+      phone,
+
+      service,
+
+      bookingDate,
+
+      timeSlot,
+
+      amount,
+
+      bookingId:
+        "BOOK" + Date.now(),
+
+      status: "Pending"
+
+    });
+
+    // ==========================
+    // EMAIL
+    // ==========================
+
+    const html = `
+    <div style="font-family:Arial">
+
+    <h2>Booking Confirmation</h2>
+
+    <p>Hello <b>${customerName}</b>,</p>
+
+    <p>Your booking has been created successfully.</p>
+
+    <hr>
+
+    <h3>Booking Details</h3>
+
+    <p><b>Booking ID:</b> ${booking.bookingId}</p>
+
+    <p><b>Service:</b> ${service}</p>
+
+    <p><b>Date:</b> ${bookingDate}</p>
+
+    <p><b>Time:</b> ${timeSlot}</p>
+
+    <p><b>Amount:</b> ₹${amount}</p>
+
+    <p><b>Status:</b> Pending Payment</p>
+
+    <br>
+
+    <h4>
+    Thank you for choosing
+    SkillConnect Pro ❤️
+    </h4>
+
+    </div>
+    `;
+
+    await sendEmail(
+
+      email,
+
+      "Booking Confirmation",
+
+      html
+
+    );
+
+    // ==========================
+    // DEMO SMS
+    // ==========================
+
+    console.log("================================");
+
+    console.log("📱 SMS SENT");
+
+    console.log(`Hello ${customerName}`);
+
+    console.log(
+      `Booking Confirmed`
+    );
+
+    console.log(
+      `Service : ${service}`
+    );
+
+    console.log(
+      `Date : ${bookingDate}`
+    );
+
+    console.log(
+      `Time : ${timeSlot}`
+    );
+
+    console.log(
+      `Amount : ₹${amount}`
+    );
+
+    console.log("================================");
+
+    res.status(201).json({
+
+      success:true,
+
+      message:
+      "Booking Created Successfully",
+
+      booking
+
+    });
 
   }
 
   catch(error){
 
     res.status(500).json({
+
+      success:false,
+
       message:error.message
+
     });
 
   }
 
 };
 
+// ======================================
+// GET BOOKINGS
+// ======================================
+
 exports.getBookings =
-async (req,res)=>{
+async(req,res)=>{
 
-  try{
+try{
 
-    const bookings =
-    await Booking.find()
-    .populate("userId")
-    .populate("serviceId");
+const bookings =
+await Booking.find()
 
-    res.json(bookings);
+.populate("userId")
 
-  }
+.populate("serviceId")
 
-  catch(error){
+.sort({
 
-    res.status(500).json({
-      message:error.message
-    });
+createdAt:-1
 
-  }
+});
+
+res.json(bookings);
+
+}
+
+catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
+
+};
+
+// ======================================
+// GET BOOKING
+// ======================================
+
+exports.getBookingById =
+async(req,res)=>{
+
+try{
+
+const booking =
+await Booking.findById(
+
+req.params.id
+
+)
+
+.populate("userId")
+
+.populate("serviceId");
+
+if(!booking){
+
+return res.status(404).json({
+
+message:"Booking Not Found"
+
+});
+
+}
+
+res.json(booking);
+
+}
+
+catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
+
+};
+
+// ======================================
+// UPDATE STATUS
+// ======================================
+
+exports.updateBooking =
+async(req,res)=>{
+
+try{
+
+const booking =
+await Booking.findByIdAndUpdate(
+
+req.params.id,
+
+req.body,
+
+{
+
+new:true
+
+}
+
+);
+
+if(!booking){
+
+return res.status(404).json({
+
+message:"Booking Not Found"
+
+});
+
+}
+
+res.json({
+
+success:true,
+
+booking
+
+});
+
+}
+
+catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
+
+};
+
+// ======================================
+// DELETE
+// ======================================
+
+exports.deleteBooking =
+async(req,res)=>{
+
+try{
+
+const booking =
+await Booking.findByIdAndDelete(
+
+req.params.id
+
+);
+
+if(!booking){
+
+return res.status(404).json({
+
+message:"Booking Not Found"
+
+});
+
+}
+
+res.json({
+
+success:true,
+
+message:"Booking Deleted"
+
+});
+
+}
+
+catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
 
 };

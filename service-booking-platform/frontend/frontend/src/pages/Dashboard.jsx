@@ -1,162 +1,219 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 import "./Dashboard.css";
 
 function Dashboard() {
-
   const [bookings, setBookings] = useState([]);
-
-  useEffect(() => {
-
-    const storedBookings =
-      JSON.parse(localStorage.getItem("bookings")) || [];
-
-    setBookings(storedBookings);
-
-  }, []);
+  const [loading, setLoading] = useState(true);
 
   const user =
-    JSON.parse(localStorage.getItem("user"));
+    JSON.parse(localStorage.getItem("user")) || {};
 
-  const paymentStatus =
-    localStorage.getItem("paymentStatus");
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
+  const fetchBookings = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/bookings"
+      );
+
+      const myBookings = res.data.filter(
+        (booking) =>
+          booking.email === user.email ||
+          booking.userId?._id === user._id
+      );
+
+      setBookings(myBookings);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const totalBookings = bookings.length;
 
-  const completedBookings =
-    bookings.filter(
-      (booking) =>
-        booking.status === "Completed"
-    ).length;
+  const completed = bookings.filter(
+    (b) =>
+      b.bookingStatus === "Completed" ||
+      b.status === "Completed"
+  ).length;
 
-  const pendingBookings =
-    bookings.filter(
-      (booking) =>
-        booking.status === "Pending"
-    ).length;
+  const pending = bookings.filter(
+    (b) =>
+      b.bookingStatus === "Pending" ||
+      b.status === "Pending"
+  ).length;
+
+  const paid = bookings.filter(
+    (b) => b.paymentStatus === "Paid"
+  ).length;
 
   return (
     <>
       <Navbar />
 
-      <div className="dashboard">
+      <div className="dashboard-page">
 
-        <h1>
-          Welcome Back 👋 {user?.name || "User"}
-        </h1>
+        <div className="dashboard-banner">
 
-        <div className="stats-grid">
+          <div>
 
-          <div className="stat-box">
-            <h2>📅</h2>
-            <h1>{totalBookings}</h1>
+            <h1>
+              Welcome back,
+              <span> {user.name || "Customer"} 👋</span>
+            </h1>
+
+            <p>
+              Manage your bookings, payments,
+              and services from one place.
+            </p>
+
+          </div>
+
+          <Link
+            to="/services"
+            className="explore-btn"
+          >
+            Explore Services
+          </Link>
+
+        </div>
+
+        <div className="dashboard-stats">
+
+          <div className="stat-card">
+            <h2>{totalBookings}</h2>
             <p>Total Bookings</p>
           </div>
 
-          <div className="stat-box">
-            <h2>✅</h2>
-            <h1>{completedBookings}</h1>
+          <div className="stat-card success">
+            <h2>{completed}</h2>
             <p>Completed</p>
           </div>
 
-          <div className="stat-box">
-            <h2>⏳</h2>
-            <h1>{pendingBookings}</h1>
+          <div className="stat-card warning">
+            <h2>{pending}</h2>
             <p>Pending</p>
           </div>
 
-          <div className="stat-box">
-            <h2>💳</h2>
-            <h1>
-              {paymentStatus === "Paid"
-                ? "Paid"
-                : "Pending"}
-            </h1>
-            <p>Payment</p>
+          <div className="stat-card paid">
+            <h2>{paid}</h2>
+            <p>Payments</p>
           </div>
 
         </div>
 
-        <div className="dashboard-section">
+        <div className="booking-section">
 
-          <div className="dashboard-card">
+          <h2>Recent Bookings</h2>
 
-            <h2>📋 My Bookings</h2>
+          {loading ? (
 
-            {bookings.length === 0 ? (
+            <div className="empty-card">
+              Loading...
+            </div>
 
-              <p>No Bookings Yet</p>
+          ) : bookings.length === 0 ? (
 
-            ) : (
+            <div className="empty-card">
 
-              bookings.map((booking, index) => (
+              <h3>No Bookings Yet</h3>
+
+              <p>
+                Start by booking your first
+                professional service.
+              </p>
+
+              <Link
+                to="/services"
+                className="book-btn"
+              >
+                Browse Services
+              </Link>
+
+            </div>
+
+          ) : (
+
+            <div className="booking-grid">
+
+              {bookings.map((booking) => (
 
                 <div
-                  key={index}
-                  className="booking-item"
+                  className="booking-card"
+                  key={booking._id}
                 >
 
-                  <h3>
-                    {booking.service ||
-                      "Service Booking"}
-                  </h3>
+                  <div className="booking-top">
 
-                  <p>
-                    📅 {booking.bookingDate}
-                  </p>
+                    <h3>
+                      {booking.service ||
+                        booking.serviceId?.title}
+                    </h3>
 
-                  <p>
-                    ⏰ {booking.timeSlot}
-                  </p>
-
-                  <p>
-                    Status:
-                    <strong
-                      style={{
-                        color:
-                          booking.status ===
-                          "Completed"
-                            ? "limegreen"
-                            : "orange",
-                      }}
+                    <span
+                      className={
+                        booking.paymentStatus === "Paid"
+                          ? "paid-badge"
+                          : "pending-badge"
+                      }
                     >
-                      {" "}
-                      {booking.status}
-                    </strong>
-                  </p>
+                      {booking.paymentStatus ||
+                        "Pending"}
+                    </span>
 
-                  <hr />
+                  </div>
+
+                  <div className="booking-info">
+
+                    <p>
+                      📅 {booking.bookingDate}
+                    </p>
+
+                    <p>
+                      ⏰ {booking.timeSlot}
+                    </p>
+
+                    <p>
+                      💰 ₹{booking.amount}
+                    </p>
+
+                    <p>
+                      Booking ID :
+                      {booking.bookingId}
+                    </p>
+
+                  </div>
+
+                  {booking.paymentStatus !==
+                    "Paid" && (
+
+                    <Link
+                      to="/payment"
+                      className="pay-btn"
+                    >
+                      Complete Payment
+                    </Link>
+
+                  )}
 
                 </div>
 
-              ))
+              ))}
 
-            )}
+            </div>
 
-          </div>
-
-          <div className="dashboard-card">
-
-            <h2>🔔 Notifications</h2>
-
-            {paymentStatus === "Paid" ? (
-              <>
-                <p>✅ Payment Successful</p>
-                <p>✅ Booking Confirmed</p>
-                <p>🎉 Service Activated</p>
-              </>
-            ) : (
-              <>
-                <p>⏳ Payment Pending</p>
-                <p>📅 Booking Created</p>
-              </>
-            )}
-
-          </div>
+          )}
 
         </div>
 
       </div>
+
     </>
   );
 }

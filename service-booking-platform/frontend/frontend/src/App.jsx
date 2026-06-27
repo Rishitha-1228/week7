@@ -16,53 +16,21 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Home */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
-        {/* Services */}
-        <Route
-          path="/services"
-          element={<Services />}
-        />
+        <Route path="/services" element={<Services />} />
 
-        {/* Dashboard */}
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+        <Route path="/booking" element={<Booking />} />
 
-        {/* Profile */}
-        <Route
-          path="/profile"
-          element={<Profile />}
-        />
+        <Route path="/payment" element={<Payment />} />
 
-        {/* Login */}
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Register */}
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        <Route path="/profile" element={<Profile />} />
 
-        {/* Booking */}
-        <Route
-          path="/booking"
-          element={<Booking />}
-        />
+        <Route path="/login" element={<Login />} />
 
-        {/* Payment */}
-        <Route
-          path="/payment"
-          element={<Payment />}
-        />
+        <Route path="/register" element={<Register />} />
 
       </Routes>
     </BrowserRouter>

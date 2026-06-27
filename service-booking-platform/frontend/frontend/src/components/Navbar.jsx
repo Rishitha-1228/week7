@@ -1,37 +1,62 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import "./Navbar.css";
 
 function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <nav className="navbar">
-      <h2>SkillConnect Pro</h2>
 
-      <div className="nav-links">
-        <Link to="/">Home</Link>
+      <div className="logo">
+        <Link to="/">
+          <span>SC</span> SkillConnect Pro
+        </Link>
+      </div>
 
-        <Link to="/services">
+      <div className={menuOpen ? "nav-links active" : "nav-links"}>
+
+        <Link to="/" onClick={() => setMenuOpen(false)}>
+          Home
+        </Link>
+
+        <Link to="/services" onClick={() => setMenuOpen(false)}>
           Services
         </Link>
 
-        <Link to="/dashboard">
+        <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
           Dashboard
         </Link>
 
-        <Link to="/profile">
+        <Link to="/booking" onClick={() => setMenuOpen(false)}>
+          Bookings
+        </Link>
+
+        <Link to="/profile" onClick={() => setMenuOpen(false)}>
           Profile
         </Link>
 
-        <Link to="/login">
+      </div>
+
+      <div className="nav-buttons">
+
+        <Link to="/login" className="login-btn">
           Login
         </Link>
 
-        <Link
-          to="/register"
-          className="signup-btn"
-        >
-          Sign Up
+        <Link to="/register" className="register-btn">
+          Register
         </Link>
+
       </div>
+
+      <div
+        className="hamburger"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </div>
+
     </nav>
   );
 }

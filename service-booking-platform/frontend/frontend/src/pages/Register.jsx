@@ -12,24 +12,14 @@ function Register() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    const user = {
-      name,
-      email,
-      password,
-      bookings: [],
-    };
+    const user = { name, email, password, bookings: [] };
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
+    localStorage.setItem("user", JSON.stringify(user));
 
     // Clear previous user's data
     localStorage.removeItem("bookings");
     localStorage.removeItem("paymentStatus");
     localStorage.removeItem("currentUser");
-
-    alert("Registration Successful ✅");
 
     navigate("/login");
   };
@@ -37,58 +27,54 @@ function Register() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-
-        <h1>Register</h1>
-
-        <p className="subtitle">
-          Create Your Account
+        <span className="auth-eyebrow">Get started</span>
+        <h1>Create your account</h1>
+        <p className="auth-subtitle">
+          Book trusted professionals in minutes.
         </p>
 
-        <form onSubmit={handleRegister}>
+        <form onSubmit={handleRegister} className="auth-form">
+          <label className="auth-field">
+            <span>Full name</span>
+            <input
+              type="text"
+              placeholder="Your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </label>
 
-          <input
-            type="text"
-            placeholder="👤 Full Name"
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-            required
-          />
+          <label className="auth-field">
+            <span>Email address</span>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
 
-          <input
-            type="email"
-            placeholder="📧 Email Address"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            required
-          />
+          <label className="auth-field">
+            <span>Password</span>
+            <input
+              type="password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
 
-          <input
-            type="password"
-            placeholder="🔒 Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-            required
-          />
-
-          <button type="submit">
-            Register
+          <button type="submit" className="sc-btn sc-btn--primary auth-submit">
+            Create account
           </button>
-
         </form>
 
-        <p className="bottom-text">
-          Already have an account?{" "}
-          <Link to="/login">
-            Login
-          </Link>
+        <p className="auth-bottom-text">
+          Already have an account? <Link to="/login">Log in</Link>
         </p>
-
       </div>
     </div>
   );

@@ -1,167 +1,266 @@
-import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import "./Home.css";
+import { Link } from "react-router-dom";
 
-function Home() {
+export default function Home() {
+  const categories = [
+    {
+      icon: "💻",
+      title: "Web Development",
+      desc: "Modern websites, MERN applications and business portals."
+    },
+    {
+      icon: "🤖",
+      title: "AI Solutions",
+      desc: "Chatbots, AI automation and intelligent assistants."
+    },
+    {
+      icon: "☁️",
+      title: "Cloud Services",
+      desc: "AWS deployment, DevOps and cloud infrastructure."
+    },
+    {
+      icon: "🎨",
+      title: "UI / UX Design",
+      desc: "Beautiful user experiences and mobile interfaces."
+    },
+    {
+      icon: "📈",
+      title: "Digital Marketing",
+      desc: "SEO, Social Media and Brand Growth."
+    }
+  ];
+
+  const services = [
+    {
+      title: "Business Website",
+      price: "₹4,999",
+      image:
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600"
+    },
+    {
+      title: "AI Chatbot",
+      price: "₹6,999",
+      image:
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600"
+    },
+    {
+      title: "Cloud Deployment",
+      price: "₹3,999",
+      image:
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600"
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Rahul",
+      text: "Excellent service and amazing support throughout the project."
+    },
+    {
+      name: "Priya",
+      text: "Very professional team. Delivery was on time."
+    },
+    {
+      name: "Naveen",
+      text: "Highly recommended for startups and businesses."
+    }
+  ];
+
   return (
     <div className="home">
 
-      {/* Hero Section */}
+      {/* HERO */}
+
       <section className="hero">
-        <div className="hero-content">
-          <h1>Book Professional Services</h1>
+
+        <div className="hero-overlay">
+
+          <h4>TRUSTED PROFESSIONAL SERVICES</h4>
+
+          <h1>
+            Book Professional
+            <br />
+            Services With Confidence
+          </h1>
+
           <p>
             AI • Cloud • Web Development • UI/UX • Digital Marketing
           </p>
 
           <div className="hero-buttons">
-            <Link to="/services" className="btn-primary">
+
+            <Link to="/services" className="primary-btn">
               Explore Services
             </Link>
 
-            <Link to="/register" className="btn-secondary">
+            <Link to="/register" className="secondary-btn">
               Get Started
             </Link>
+
           </div>
+
         </div>
+
       </section>
 
-      {/* Search Section */}
+      {/* SEARCH */}
+
       <section className="search-section">
+
         <h2>Find Your Perfect Service</h2>
 
-        <input
-          type="text"
-          placeholder="Search Web Development, AI, Cloud..."
-        />
+        <div className="search-box">
+
+          <input
+            type="text"
+            placeholder="Search services..."
+          />
+
+          <button>Search</button>
+
+        </div>
+
       </section>
 
-      {/* Categories */}
+      {/* CATEGORIES */}
+
       <section className="categories">
-        <h2>Service Categories</h2>
+
+        <h2>Categories</h2>
 
         <div className="category-grid">
 
-          <div className="category-card">
-            <h3>💻 Web Development</h3>
-            <p>Modern websites and applications.</p>
-          </div>
+          {categories.map((item, index) => (
 
-          <div className="category-card">
-            <h3>🤖 AI Solutions</h3>
-            <p>AI tools, chatbots and automation.</p>
-          </div>
+            <div className="category-card" key={index}>
 
-          <div className="category-card">
-            <h3>☁ Cloud Services</h3>
-            <p>AWS, Azure and deployment services.</p>
-          </div>
+              <h1>{item.icon}</h1>
 
-          <div className="category-card">
-            <h3>🎨 UI/UX Design</h3>
-            <p>Beautiful user experiences.</p>
-          </div>
+              <h3>{item.title}</h3>
 
-          <div className="category-card">
-            <h3>📈 Digital Marketing</h3>
-            <p>Grow your business online.</p>
-          </div>
+              <p>{item.desc}</p>
+
+            </div>
+
+          ))}
 
         </div>
+
       </section>
 
-      {/* Featured Services */}
-      <section className="featured">
-        <h2>Featured Services</h2>
+      {/* SERVICES */}
+
+      <section className="services">
+
+        <h2>Popular Services</h2>
 
         <div className="service-grid">
 
-          <div className="service-card">
-            <h3>Website Development</h3>
-            <p>Professional business websites.</p>
-            <span>₹4999</span>
-          </div>
+          {services.map((service, index) => (
 
-          <div className="service-card">
-            <h3>AI Chatbot</h3>
-            <p>Custom intelligent chatbot.</p>
-            <span>₹6999</span>
-          </div>
+            <div className="service-card" key={index}>
 
-          <div className="service-card">
-            <h3>Cloud Deployment</h3>
-            <p>AWS deployment & management.</p>
-            <span>₹3999</span>
-          </div>
+              <img
+                src={service.image}
+                alt={service.title}
+              />
+
+              <div className="service-content">
+
+                <h3>{service.title}</h3>
+
+                <h2>{service.price}</h2>
+
+                <Link
+                  to="/services"
+                  className="book-btn"
+                >
+                  Book Now
+                </Link>
+
+              </div>
+
+            </div>
+
+          ))}
 
         </div>
+
       </section>
 
-      {/* Statistics */}
+      {/* STATS */}
+
       <section className="stats">
 
-        <div className="stat-card">
+        <div>
           <h1>500+</h1>
-          <p>Clients</p>
+          <p>Clients Served</p>
         </div>
 
-        <div className="stat-card">
-          <h1>1200+</h1>
+        <div>
+          <h1>1,200+</h1>
           <p>Bookings</p>
         </div>
 
-        <div className="stat-card">
+        <div>
           <h1>98%</h1>
-          <p>Satisfaction</p>
+          <p>Client Satisfaction</p>
         </div>
 
       </section>
 
-      {/* Testimonials */}
+      {/* TESTIMONIALS */}
+
       <section className="testimonials">
-        <h2>What Clients Say</h2>
+
+        <h2>What Our Clients Say</h2>
 
         <div className="testimonial-grid">
 
-          <div className="testimonial-card">
-            <p>
-              "Excellent service and fast delivery."
-            </p>
-            <h4>- Rahul</h4>
-          </div>
+          {testimonials.map((item, index) => (
 
-          <div className="testimonial-card">
-            <p>
-              "Professional AI solutions for our startup."
-            </p>
-            <h4>- Priya</h4>
-          </div>
+            <div className="testimonial-card" key={index}>
 
-          <div className="testimonial-card">
-            <p>
-              "Amazing support and quality work."
-            </p>
-            <h4>- Naveen</h4>
-          </div>
+              <p>"{item.text}"</p>
+
+              <h4>{item.name}</h4>
+
+            </div>
+
+          ))}
 
         </div>
+
       </section>
 
-      {/* Footer */}
-      <footer className="footer">
-        <h3>SkillConnect Pro</h3>
-        <p>Connecting Clients with Top Professionals</p>
+      {/* FOOTER */}
+
+      <footer>
+
+        <h2>SkillConnect Pro</h2>
+
+        <p>
+          Connecting customers with trusted professionals.
+        </p>
 
         <div className="footer-links">
+
           <Link to="/">Home</Link>
+
           <Link to="/services">Services</Link>
+
           <Link to="/dashboard">Dashboard</Link>
-          <Link to="/login">Login</Link>
+
+          <Link to="/profile">Profile</Link>
+
         </div>
+
+        <p>
+          © 2026 SkillConnect Pro. All Rights Reserved.
+        </p>
+
       </footer>
 
     </div>
   );
 }
-
-export default Home;
