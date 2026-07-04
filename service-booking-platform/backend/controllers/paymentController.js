@@ -38,10 +38,13 @@ exports.verifyPayment = async (req, res) => {
     let booking = null;
     if (bookingId) {
       booking = await Booking.findByIdAndUpdate(
-        bookingId,
-        { status: "Paid" },
-        { new: true }
-      ).populate("serviceId").populate("userId");
+  bookingId,
+  {
+    status: "Completed",
+    paymentStatus: "Paid",
+  },
+  { new: true }
+).populate("serviceId").populate("userId");
     }
  
     // Generate transaction ID

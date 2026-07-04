@@ -17,8 +17,11 @@ function Dashboard() {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/bookings"
+      const API =
+  "https://week7-if5e.onrender.com";
+
+const res = await axios.get(
+  `${API}/api/bookings`
       );
 
       const myBookings = res.data.filter(
